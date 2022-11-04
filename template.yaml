@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Demo serverless CRUD
+
+Parameters:
+  Environment:
+    Type: String
+  Project:
+    Type: String
+
+Globals:
+  Function:
+    Runtime: nodejs16.x
+    Timeout: 30
+    MemorySize: 128
+    Tracing: Active
+
+Resources:
+  SendRequestToSQS:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        External: 
+          - 'aws-sdk'
+    Properties:
+      Handler: sendrequesttosqs.Handler
+      CodeUri: ./src/functions/sqsservices
+      FunctionName: 
+        Fn::Sub: ${AWS::StackName}-SendRequestToSQS      
+      Environment:
+        Variables:
+          ENV: 
+            Ref: Environment
+          SQS_QUEUE: 
+            Ref: SqsQueue
+      Policies:
+        - AWSLambdaExecute
+        - AWSXRayDaemonWriteAccess
+        - Version: '2012-10-17' 
+          Statement:
+            - Effect: Allow
+              Action:
+                - sqs:SendMessage
+              Resource: !GetAtt SqsQueue.Arn
+      Events:
+        CronEvent:
+          Type: Schedule
+          Properties:
+            Schedule: 'rate(1 minute)'
+            Enabled: false
+
+  TriggerSQS:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+    Properties:
+      Handler: triggersqs.Handler
+      CodeUri: ./src/functions/sqsservices
+      FunctionName: 
+        Fn::Sub: ${AWS::StackName}-TriggerSQS      
+      Environment:
+        Variables:
+          ENV: 
+            Ref: Environment
+      Policies:
+        - AWSLambdaExecute
+        - AWSXRayDaemonWriteAccess
+      Events:
+        TriggerSQS:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt SqsQueue.Arn
+            BatchSize: 1
+  TriggerDLQ:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+    Properties:
+      Handler: triggerdlq.Handler
+      CodeUri: ./src/functions/sqsservices
+      FunctionName: 
+        Fn::Sub: ${AWS::StackName}-TriggerDLQ      
+      Environment:
+        Variables:
+          ENV: 
+            Ref: Environment
+      Policies:
+        - AWSLambdaExecute
+        - AWSXRayDaemonWriteAccess
+      Events:
+        TriggerDLQ:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt DeadLetterQueue.Arn
+            BatchSize: 1
+
+  SqsQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      RedriveAllowPolicy: '{"redrivePermission":"allowAll"}'
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "DeadLetterQueue"
+            - "Arn"
+        maxReceiveCount: 1
+
+  DeadLetterQueue: 
+    Type: AWS::SQS::Queue

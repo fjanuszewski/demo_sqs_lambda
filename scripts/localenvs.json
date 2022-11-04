@@ -1,11 +1,5 @@
 {
-    "GetAccountByIdFunction": {
-        "ACCOUNTS_TABLE": "develop-sam-template-AccountsTable-FA1UE6H9FE8Y"
-    },
-    "PostAccountFunction": {
-        "ACCOUNTS_TABLE": "develop-sam-template-AccountsTable-FA1UE6H9FE8Y"
-    },
-    "PutAccountFunction": {
-        "ACCOUNTS_TABLE": "develop-sam-template-AccountsTable-FA1UE6H9FE8Y"
+    "SqsQueue": {
+        "SQS_QUEUE": "develop-sam-template-AccountsTable-FA1UE6H9FE8Y"
     }
 }

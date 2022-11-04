@@ -9,7 +9,7 @@ const myfunction = async () => {
   };
   await sqs.sendMessage(params, function (err, data) {
     if (err) {
-      console.log('error:', "Fail Send Message" + err);
+      console.log('error:', 'Fail Send Message' + err);
     } else {
       console.log('data:', data.MessageId);
     }
@@ -17,10 +17,11 @@ const myfunction = async () => {
 }
 
 exports.Handler = async (event) => {
-  log.info("START:", event)
+  log.info('START:', event)
 
   try {
     const data = await myfunction();
+    log.info(data)
     return {
       statusCode: 200
     }

@@ -13,6 +13,7 @@
     "complexity-test": "echo TODO: implement some kind of complexity test"
   },
   "dependencies": {
+    "@aws-sdk/client-sqs": "^3.204.0",
     "aws-xray-sdk": "^3.3.8",
     "lambda-log": "^3.1.0",
     "lodash": "^4.17.21"

@@ -1,19 +1,18 @@
 const log = require('lambda-log');
-var AWS = require('aws-sdk');
-var sqs = new AWS.SQS();
-
+const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
+const sqsClient = new SQSClient();
 const myfunction = async () => {
-  var params = {
-    MessageBody: 'HOLA MUNDO A SQS',
-    QueueUrl: process.env.SQS_QUEUE
-  };
-  await sqs.sendMessage(params, function (err, data) {
-    if (err) {
-      console.log('error:', 'Fail Send Message' + err);
-    } else {
-      console.log('data:', data.MessageId);
-    }
-  }).promise();
+  try {
+      var params = {
+        MessageBody: 'HOLA MUNDO A SQS',
+        QueueUrl: process.env.SQS_QUEUE
+      };
+    const data = await sqsClient.send(new SendMessageCommand(params));
+    console.log('Success, message sent. MessageID:', data.MessageId);
+    return data; // For unit tests.
+  } catch (err) {
+    console.error('Error en SQSSSS', err);
+  }
 }
 
 exports.Handler = async (event) => {

@@ -1,0 +1,47 @@
+{
+  "default": {
+    "statusCode": 500,
+    "body": {
+      "error": {
+        "code": "internal-error",
+        "message": "Hubo un error no identificado"
+      }
+    }
+  },
+  "emptyParams": {
+    "statusCode": 406,
+    "body": {
+      "error": {
+        "code": "empty-params",
+        "message": "Uno o mas parametros estan vacios"
+      }
+    }
+  },
+  "invalidParams": {
+    "statusCode": 406,
+    "body": {
+      "error": {
+        "code": "invalid-params",
+        "message": "Uno o mas parametros son invalidos"
+      }
+    }
+  },
+  "accountNotFound": {
+    "statusCode": 400,
+    "body": {
+      "error": {
+        "code": "account-not-found",
+        "message": "AccountId no encontrado"
+      }
+    }
+  },
+  "accountAlreadyExist": {
+    "statusCode": 400,
+    "body": {
+      "error": {
+        "code": "account-already-exist",
+        "message": "AccountId ya existente"
+      }
+    }
+  }
+}

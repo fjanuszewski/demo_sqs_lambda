@@ -1,0 +1,5 @@
+{
+    "SqsQueue": {
+        "SQS_QUEUE": "develop-sam-template-AccountsTable-FA1UE6H9FE8Y"
+    }
+}

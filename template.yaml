@@ -46,7 +46,7 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: 'rate(1 minute)'
-            Enabled: false
+            Enabled: false #CHANGE TO ENABLE
 
   TriggerSQS:
     Type: AWS::Serverless::Function

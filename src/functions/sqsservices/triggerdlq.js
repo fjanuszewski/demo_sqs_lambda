@@ -14,7 +14,7 @@ exports.Handler = async (event,context,callback) => {
     event.Records.forEach(record => {
       const { body,messageId } = record;
       AWSXRay.captureFunc('annotations', function(subsegment) {
-        subsegment.addAnnotation('SqsMessage', messageId);
+        subsegment.addAnnotation('sqsmessageid', messageId);
       });
       log.info(body)
     });

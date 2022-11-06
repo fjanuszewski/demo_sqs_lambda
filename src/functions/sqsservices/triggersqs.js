@@ -14,9 +14,9 @@ exports.Handler = async (event,context,callback) => {
     event.Records.forEach(record => {
       const { body,messageId } = record;
       AWSXRay.captureFunc('annotations', function(subsegment) {
-        subsegment.addAnnotation('SqsMessage', messageId);
+        subsegment.addAnnotation('sqsmessageid', messageId);
       });
-      if (body == 'ERROR'){
+      if (body == 'ERROR'){ //SIMULATE ERROR
         callback(new Error('Something went wrong'));
       }
     });

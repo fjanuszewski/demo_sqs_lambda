@@ -26,6 +26,9 @@ exports.Handler = async (event) => {
 
   try {
     const data = await myfunction();
+    AWSXRay.captureFunc('annotations', function(subsegment) {
+      subsegment.addAnnotation('sqsmessageid', data); //CHANGE TO MAP OTHER ANNOTATIONS
+    });
     log.info(data)
     return {
       statusCode: 200

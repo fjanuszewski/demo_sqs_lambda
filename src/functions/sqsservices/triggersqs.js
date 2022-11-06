@@ -1,4 +1,5 @@
 const log = require('lambda-log');
+const AWSXRay = require('aws-xray-sdk');
 
 const myfunction = async () => {
   log.info('Hello World from SQS TRIGGER')
@@ -11,7 +12,10 @@ exports.Handler = async (event,context,callback) => {
     const data = await myfunction();
     log.info(data)
     event.Records.forEach(record => {
-      const { body } = record;
+      const { body,messageId } = record;
+      AWSXRay.captureFunc('annotations', function(subsegment) {
+        subsegment.addAnnotation('SqsMessage', messageId);
+      });
       if (body == 'ERROR'){
         callback(new Error('Something went wrong'));
       }

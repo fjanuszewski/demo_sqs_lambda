@@ -5,16 +5,21 @@ NC='\033[0m' # No Color
 
 # VARIABLES STANDAR
 ENV=XXXXX #THIS WORK FINE IF WE USE SAM IN LOCAL. IN PIPELINE IS NOT NEED
-BUCKET=XXXXX #BUCKET IS REQUIRED FOR SAM PACKAGE
+BUCKET=desployfabianbucket #BUCKET IS REQUIRED FOR SAM PACKAGE
 
-STACK=XXXXX-bakend-$ENV #NAME OF STACK, IS IMPORTANT FOR THE NAME OF ALL OBJECTS IN TEMPLATE
+STACK=XXXXX-$ENV #NAME OF STACK, IS IMPORTANT FOR THE NAME OF ALL OBJECTS IN TEMPLATE
 PROJECT=XXXXX #PROJECT NAME FOR THE TAGS
 
 AWS_PROFILE=XXXXX
 
-REGION_1=us-east-1
+REGION_1=us-east-1 #CHANGE REGION
 
-echo "================== Create Bucket =================="
+echo "${YELLOW} Installing Dependencies..."
+echo " ================================${NC}"
+sh .prebuild.sh
+
+echo "${YELLOW} Creating Temporaly Bucket..."
+echo " ================================${NC}"
 aws s3api create-bucket --bucket $BUCKET --profile $AWS_PROFILE
 
 echo "${YELLOW} Validating local SAM Template..."
@@ -23,7 +28,7 @@ sam validate --profile $AWS_PROFILE --region $REGION_1 --template "template.yaml
 
 echo "${YELLOW} Building local SAM App..."
 echo " =========================${NC}"
-sam build -p --cached
+sam build -p
 
 echo "${YELLOW} Deploy"
 echo " ================================================= ${NC}"

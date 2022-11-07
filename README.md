@@ -15,6 +15,9 @@ Must have installed AWS CLI and SAM. After install AWS CLI configure the AWS CLI
 
 NodeJs is required for Build the lambda trigger.
 
+**This proyect build with ESBUILD, every lambda need the attribute BuildMethod: esbuild**
+**The command .prebuild.sh and package folder are required for work**
+
 ### Installing AWS CLI & SAM
 - [AWS CLI Installer](https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-install.html)
 - [SAM Installer](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
